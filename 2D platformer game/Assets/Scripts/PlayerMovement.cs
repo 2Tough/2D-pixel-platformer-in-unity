@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpHeight = 14f;
     private enum MovementState { idle, running, jumping, falling }
+    private BoxCollider2D coll;
+    [SerializeField] private LayerMask jumpOnGround;
 
     // Start is called before the first frame update
     private void Start()
@@ -18,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        coll = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -26,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
         dirX = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirX* moveSpeed, rb.velocity.y);
     
-        if(Input.GetButtonDown("Jump"))
+        if(Input.GetButtonDown("Jump") && IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
         }
@@ -64,5 +67,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         anim.SetInteger("state", (int)state);
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, .1f, jumpOnGround);
     }
 }
