@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D coll;
     [SerializeField] private LayerMask jumpOnGround;
 
+
     // Start is called before the first frame update
     private void Start()
     {
